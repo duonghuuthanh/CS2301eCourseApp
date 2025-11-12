@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
-from django.conf.global_settings import AUTH_USER_MODEL
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,6 +28,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+import cloudinary.api
+
+cloudinary.config(
+    cloud_name="dxxwcby8l",
+    api_key="792844686918347",
+    api_secret="T8ys_Z9zaKSqmKWa4K1RY6DXUJg"
+)
 
 # Application definition
 
@@ -44,11 +49,14 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'rest_framework',
-    'drf_yasg'
+    'drf_yasg',
+    'oauth2_provider'
 ]
 
 REST_FRAMEWORK = {
-
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    )
 }
 
 MIDDLEWARE = [
@@ -82,7 +90,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ecourseapisv1.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
@@ -92,11 +99,12 @@ DATABASES = {
         'NAME': 'coursedbv1',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': '' # mặc định localhost
+        'HOST': ''  # mặc định localhost
     }
 }
 
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
 AUTH_USER_MODEL = 'courses.User'
@@ -119,7 +127,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -131,7 +138,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
@@ -141,3 +147,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CLIENI_ID = 'lqtezFjp9KsQuNvHeRWgWR5S4pHg9Hnu17izXpx3'
+CLIENT_SECRET = '8JHcox4rDCUcdP5miRXyTUYUmUiz1R57TaYcgGscqonxA045NbAhuQt5L7CS7ZGFagQn0lk8p6ikZj5IRQ2e3GSojR9MyuczhDLSuo6nuj4xv4UE2pwSc6ycgBZR2D9v'
