@@ -43,8 +43,13 @@ INSTALLED_APPS = [
     'ckeditor',
     'ckeditor_uploader',
     'rest_framework',
-    'drf_yasg'
+    'drf_yasg',
+    'oauth2_provider'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',)
+}
 
 import cloudinary.api
 cloudinary.config(
@@ -140,3 +145,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CLIENT_ID = 'kOditntahpflHNyaUMLSstRc5KkmZHhN2P0wXf9T'
+CLIENT_SECRET = 'Ce79BktaI5NHf4YTf7jmzeARPSSrwA6qFPoTI714R4rWaGmzHvIrGD5pTNy83ZYNAzg11afpRWttldOA8npUQklkC6LhLn9sDVMyZ6N2HCVYBYsGY44RHzyDFOsELvHC'

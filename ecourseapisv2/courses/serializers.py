@@ -1,4 +1,6 @@
-from courses.models import Category, Course, Lesson
+from rest_framework.exceptions import ValidationError
+
+from courses.models import Category, Course, Lesson, Tag, User, Comment
 from rest_framework import serializers
 
 
@@ -8,11 +10,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-class CourseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = ['id', 'subject', 'created_date', 'image', 'category']
-
+class ItemSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         data = super().to_representation(instance)
         if instance.image:
@@ -20,7 +18,76 @@ class CourseSerializer(serializers.ModelSerializer):
 
         return data
 
-class LessonSerializer(serializers.ModelSerializer):
+
+class CourseSerializer(ItemSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'subject', 'created_date', 'image', 'category']
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['id', 'name']
+
+
+class LessonSerializer(ItemSerializer):
     class Meta:
         model = Lesson
-        fields = ['id', 'subject', 'created_date']
+        fields = ['id', 'subject', 'image', 'created_date']
+
+
+class LessonDetailsSerializer(LessonSerializer):
+    tags = TagSerializer(many=True)
+
+    class Meta:
+        model = LessonSerializer.Meta.model
+        fields = LessonSerializer.Meta.fields + ['content', 'tags']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'password', 'avatar']
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            }
+        }
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if instance.avatar:
+            data['avatar'] = instance.avatar.url
+
+        return data
+
+    def create(self, validated_data):
+        user = User(**validated_data)
+        user.set_password(user.password)
+        user.save()
+
+        return user
+
+    def update(self, instance, validated_data):
+        keys = set(validated_data.keys())
+        if keys - {'first_name', 'last_name', 'email'}:
+            raise ValidationError({'error': 'Invalid fields'})
+
+        return super().update(instance, validated_data)
+
+class CommentSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['user'] = UserSerializer(instance.user).data
+
+        return data
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'content', 'created_date', 'user', 'lesson']
+        extra_kwargs = {
+            'lesson': {
+                'write_only': True
+            }
+        }
