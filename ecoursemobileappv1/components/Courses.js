@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Image, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Image, TouchableOpacity, View } from "react-native";
 import { FlatList } from "react-native";
 import Apis, { endpoints } from "../utils/Apis";
 import MyStyles from "../styles/MyStyles";
 import { List, Searchbar } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
-const Courses = ({cate, navigation}) => {
+const Courses = ({ cate }) => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(false);
     const [q, setQ] = useState("");
     const [page, setPage] = useState(1);
+    const nav = useNavigation();
 
     const loadCourses = async () => {
         try {
@@ -49,7 +51,7 @@ const Courses = ({cate, navigation}) => {
             if (page > 0)
                 loadCourses();
         }, 500);
-        
+
         return () => clearTimeout(timer);
     }, [q, page, cate]);
 
@@ -63,18 +65,18 @@ const Courses = ({cate, navigation}) => {
     }
 
     return (
-        <>
+        <View style={MyStyles.padding}>
             <Searchbar placeholder="Tìm khóa học..." value={q} onChangeText={setQ} />
-            <FlatList ListFooterComponent={loading && <ActivityIndicator size="large" />} 
-                onEndReached={loadMore} data={courses} renderItem={({item}) => <List.Item
-                                                                    title={item.subject}
-                                                                    description={item.created_date}
-                                                                    left={() => <TouchableOpacity onPress={() => navigation.navigate("Lesson", {"courseId": item.id})}>
-                                                                        <Image source={{uri: item.image}} style={MyStyles.avatar} />
-                                                                    </TouchableOpacity>}
-                                                                />} />
-            
-        </>
+            <FlatList ListFooterComponent={loading && <ActivityIndicator size="large" />}
+                onEndReached={loadMore} data={courses} renderItem={({ item }) => <List.Item
+                    title={item.subject}
+                    description={item.created_date}
+                    left={() => <TouchableOpacity onPress={() => nav.navigate("Lesson", { "courseId": item.id })}>
+                        <Image source={{ uri: item.image }} style={MyStyles.avatar} />
+                    </TouchableOpacity>}
+                />} />
+
+        </View>
     );
 }
 
