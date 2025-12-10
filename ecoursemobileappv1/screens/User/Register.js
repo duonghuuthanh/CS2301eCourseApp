@@ -71,7 +71,7 @@ const Register = () => {
                                 form.append(key, {
                                     uri: user.avatar.uri,
                                     name: user.avatar.fileName,
-                                    type: user.avatar.type
+                                    type: user.avatar.type || "image/jpeg"
                                 });
                             } else
                                 form.append(key, user[key]);
