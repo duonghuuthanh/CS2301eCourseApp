@@ -7,7 +7,7 @@ import Apis, { authApis, endpoints } from "../../utils/Apis";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MyUserContext } from "../../utils/contexts/MyContext";
 
-const Login = () => {
+const Login = ({route}) => {
     const info = [{
         title: "Tên đăng nhập",
         field: "username",
@@ -48,22 +48,21 @@ const Login = () => {
                     'grant_type': 'password'
                 });
 
-                console.info(res.data);
                 AsyncStorage.setItem('token', res.data.access_token);
 
                 setTimeout(async () => {
 
                     let user = await authApis(res.data.access_token).get(endpoints['current_user']);
-                    console.info(user.data);
-
+                
                     dispatch({
                         "type": "login",
                         "payload": user.data
                     });
+
+                    const next = route.params?.next;
+                    if (next)
+                        nav.navigate(next);
                 }, 500);
-
-
-
             } catch (ex) {
                 console.error(ex);
             } finally {

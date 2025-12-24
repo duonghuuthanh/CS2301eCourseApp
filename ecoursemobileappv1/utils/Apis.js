@@ -8,7 +8,9 @@ export const endpoints = {
     'lessons': (courseId) => `/courses/${courseId}/lessons/`,
     'register': '/users/',
     'login': '/o/token/',
-    'current_user': '/users/current-user/'
+    'current_user': '/users/current-user/',
+    'lesson-details': (lessonId) => `/lessons/${lessonId}/`,
+    'comments': (lessonId) => `/lessons/${lessonId}/comments/`
 };
 
 export const authApis = (token) => {

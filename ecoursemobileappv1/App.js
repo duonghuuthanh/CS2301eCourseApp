@@ -10,6 +10,7 @@ import { MyUserContext } from "./utils/contexts/MyContext";
 import { useContext, useReducer } from "react";
 import MyUserReducer from "./utils/reducers/MyUserReducer";
 import User from "./screens/User/User";
+import LessonDetails from "./screens/Home/LessonDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ const StackNavigatior = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Course" component={Home} options={{title: "Khóa học"}} />
       <Stack.Screen name="Lesson" component={Lesson} options={{title: "Bài học"}} />
+      <Stack.Screen name="LessonDetails" component={LessonDetails} options={{title: "Chi tiết bài học"}} />
     </Stack.Navigator>
   );
 }
